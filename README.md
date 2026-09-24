@@ -5,7 +5,7 @@ Use this app to run LEGv8 assembly programs. This simulator was created by Kenne
 ## 1. Download
 
 Open the **[Releases page](https://github.com/smirarab/legissFX/releases)** and
-choose the newest release recommended by your instructor. Under **Assets**, click
+choose the newest release. Under **Assets**, click
 the file for your computer:
 
 | Your computer | File to download |
@@ -50,7 +50,7 @@ Keep the whole folder together. Moving just the `.exe` file will break the app.
    ```
 
 Keep the whole folder together. A desktop environment with GTK 3.20 or newer
-is required; if you see a missing-library error, ask your instructor for help.
+is required; if you see a missing-library error, ask us for help and we will make an effort.
 
 ## 3. Try a simple program
 
@@ -61,12 +61,10 @@ is required; if you see a missing-library error, ask your instructor for help.
 The program adds **2 + 2**. You should see **4** in the output panel and in
 register **X0**. No data file is needed for this example.
 
-## Need help?
+## FAQ
 
-These downloads are not yet digitally signed, so your computer may block the
-app or show a security warning. If that happens, contact your instructor with
-your computer type, operating system version, and a screenshot of the message.
-You do not need to install a different version of Java.
+* These downloads are not yet digitally signed, so your computer may block the
+app or show a security warning. On macOS, you only need right click on the file and press "Open".
 
 ---
 
