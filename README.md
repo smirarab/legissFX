@@ -1,7 +1,6 @@
 # LEGv8 Instruction Set Simulator
 
-Use this app to run LEGv8 assembly programs and see what happens to the registers
-and memory. **Java and JavaFX are included—you do not need to install them.**
+Use this app to run LEGv8 assembly programs. This simulator was created by Kenneth Yun, University of California, San Diego. We just package it here for ease of use with newer machines. 
 
 ## 1. Download
 
