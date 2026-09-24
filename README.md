@@ -90,11 +90,6 @@ See [Apple's instructions](https://support.apple.com/en-us/102445).
 
 See [Microsoft's explanation of this warning](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation).
 
-**No Open Anyway or Run anyway button?** A school-managed computer or Windows
-Smart App Control may prevent exceptions. Contact your instructor or IT support;
-you do not need to turn off your computer's security protection. If the message
-specifically reports malware or a damaged file, stop and report that message
-instead of following these steps.
 
 ### Do I need to install Java or JavaFX?
 
