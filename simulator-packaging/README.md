@@ -65,12 +65,20 @@ The local `.github/workflows/package-legv8.yml` defines a manually triggered
 GitHub Actions build matrix. In a repository containing the original JAR,
 this folder, and the workflow, run **Actions > Package LEGv8 simulator > Run
 workflow**. Download the four artifacts after they pass. Nothing here uploads
-the repository or publishes a release automatically. This workflow has not yet
-been run remotely; Windows, Intel Mac, and Linux output need validation there.
+the repository or publishes a release automatically. A separate release workflow
+prepares an unpublished draft after all four builds succeed. The first remote
+four-platform build completed successfully; GUI validation is still needed on
+Windows, Intel Mac, and Linux.
 
 Use a simulator-only repository if course materials should remain private.
 Each artifact contains the student archive and its checksum. Distribute the
 inner archive, not the entire GitHub artifact wrapper.
+
+For student distribution, use the draft release described in the repository's
+main README. **Create draft release** can also be started manually to reuse a
+completed build without rebuilding. It verifies each downloaded archive against
+its build checksum and combines the four manifests into one SHA256SUMS.txt.
+Only you publish the draft; the automation never publishes it.
 
 ## Before handing out to the class
 

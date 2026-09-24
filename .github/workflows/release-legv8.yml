@@ -1,0 +1,112 @@
+name: Create draft release
+
+on:
+  workflow_run:
+    workflows: [Package LEGv8 simulator]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      build_run_id:
+        description: 'Build run ID (leave blank to use the latest successful build)'
+        required: false
+        type: string
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: legv8-draft-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test release asset validation
+        run: python -m unittest discover -s simulator-packaging/checks -p 'test_release_assets.py' -v
+      - name: Select and validate the completed build
+        id: build
+        env:
+          REQUESTED_RUN: ${{ github.event.workflow_run.id || inputs.build_run_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          run_id="$REQUESTED_RUN"
+          if [[ -z "$run_id" ]]; then
+            run_id=$(gh api --method GET "repos/$GH_REPO/actions/workflows/package-legv8.yml/runs" \
+              -f branch="$DEFAULT_BRANCH" -f status=success -f event=workflow_dispatch \
+              -f per_page=1 --jq '.workflow_runs[0].id // empty')
+          fi
+          [[ "$run_id" =~ ^[0-9]+$ ]] || { echo 'No valid successful build run found.'; exit 1; }
+          gh api "repos/$GH_REPO/actions/runs/$run_id" > source-run.json
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          run = json.loads(Path('source-run.json').read_text())
+          expected = {
+              'status': 'completed', 'conclusion': 'success',
+              'event': 'workflow_dispatch', 'head_branch': os.environ['DEFAULT_BRANCH'],
+              'path': '.github/workflows/package-legv8.yml',
+          }
+          if any(run.get(k) != v for k, v in expected.items()):
+              raise SystemExit('Only successful packaging runs on the default branch may be released.')
+          if (run.get('head_repository') or {}).get('full_name') != os.environ['GH_REPO']:
+              raise SystemExit('Refusing artifacts from another repository.')
+          if not re.fullmatch(r'[0-9a-f]{40}', run['head_sha']):
+              raise SystemExit('Invalid source commit.')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write(f"run_id={run['id']}\nsha={run['head_sha']}\n")
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.build.outputs.run_id }}
+          pattern: LEGv8-0.71-*-unsigned
+          path: downloaded-artifacts
+      - name: Verify all four packages and prepare release notes
+        env:
+          BUILD_RUN_ID: ${{ steps.build.outputs.run_id }}
+          BUILD_SHA: ${{ steps.build.outputs.sha }}
+        run: python simulator-packaging/prepare_release.py downloaded-artifacts release-assets
+      - name: Create or update draft (never publish automatically)
+        env:
+          BUILD_RUN_ID: ${{ steps.build.outputs.run_id }}
+          BUILD_SHA: ${{ steps.build.outputs.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="v0.71-build-$BUILD_RUN_ID"
+          title="LEGv8 0.71 — build $BUILD_RUN_ID (unsigned)"
+          if gh release view "$tag" --json isDraft,targetCommitish > existing-release.json 2>/dev/null; then
+            python - <<'PY'
+          import json, os
+          with open('existing-release.json') as f:
+              release = json.load(f)
+          if not release['isDraft']:
+              raise SystemExit('Release is already published; refusing to replace its assets.')
+          if release['targetCommitish'] != os.environ['BUILD_SHA']:
+              raise SystemExit('Existing draft targets a different source commit.')
+          PY
+            gh release upload "$tag" release-assets/* --clobber
+            gh release edit "$tag" --title "$title" --notes-file release-notes.md
+          else
+            gh release create "$tag" release-assets/* --draft --target "$BUILD_SHA" \
+              --title "$title" --notes-file release-notes.md
+          fi
+          url=$(gh release view "$tag" --json url --jq .url)
+          echo "Draft release ready: $url" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Review the downloads, then click Publish release on GitHub.' >> "$GITHUB_STEP_SUMMARY"
