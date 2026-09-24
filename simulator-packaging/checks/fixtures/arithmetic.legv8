@@ -1,0 +1,6 @@
+ADDI X0, XZR, #7
+ADDI X1, XZR, #5
+ADD X2, X0, X1
+STUR X2, [XZR, #0]
+LDUR X3, [XZR, #0]
+STOP

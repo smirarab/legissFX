@@ -1,0 +1,21 @@
+{
+  "javafx_version": "25.0.4",
+  "javafx": {
+    "mac-aarch64": {
+      "url": "https://download2.gluonhq.com/openjfx/25.0.4/openjfx-25.0.4_osx-aarch64_bin-jmods.zip",
+      "sha256": "a57a04603455fead0e87e2d1a528ec462e12b22e6ee83bda9371274921197d44"
+    },
+    "mac-x64": {
+      "url": "https://download2.gluonhq.com/openjfx/25.0.4/openjfx-25.0.4_osx-x64_bin-jmods.zip",
+      "sha256": "0c5829ee5a52486d22867f3141dd60754875330e4960c1ec3dcd6a85cfac6d0d"
+    },
+    "windows-x64": {
+      "url": "https://download2.gluonhq.com/openjfx/25.0.4/openjfx-25.0.4_windows-x64_bin-jmods.zip",
+      "sha256": "c5471e71d3f66db340c1e59d8b4924487ab4917aaf641fc1e4e0fa1a174f79e1"
+    },
+    "linux-x64": {
+      "url": "https://download2.gluonhq.com/openjfx/25.0.4/openjfx-25.0.4_linux-x64_bin-jmods.zip",
+      "sha256": "3816e607a183a9d949efab45b4f1f68d08042a72cfd2f1c0e868fc6dc6d55573"
+    }
+  }
+}

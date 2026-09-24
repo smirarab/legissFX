@@ -1,0 +1,6 @@
+// Add 2 + 2 and print the result. No data file is needed.
+ADDI X1, XZR, #2
+ADDI X2, XZR, #2
+ADD X0, X1, X2
+PUTINT X0
+STOP

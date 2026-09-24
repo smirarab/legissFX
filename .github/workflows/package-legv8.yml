@@ -1,0 +1,45 @@
+name: Package LEGv8 simulator
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: aarch64
+            target: mac-aarch64
+          - runner: macos-15-intel
+            arch: x64
+            target: mac-x64
+          - runner: windows-2022
+            arch: x64
+            target: windows-x64
+          - runner: ubuntu-22.04
+            arch: x64
+            target: linux-x64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          architecture: ${{ matrix.arch }}
+      - name: Build private runtime, test original JAR, and package
+        run: python simulator-packaging/build.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LEGv8-0.71-${{ matrix.target }}-unsigned
+          path: simulator-packaging/dist/${{ matrix.target }}/
+          if-no-files-found: error
