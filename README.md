@@ -1,67 +1,75 @@
 # LEGv8 Instruction Set Simulator
 
-Self-contained desktop packages for the original LEGv8 simulator 0.71 by
-Kenneth Yun, University of California, San Diego. The original JAR and its
-JavaFX interface are preserved. Each download includes its own Java and
-JavaFX runtime, so students do not need to install either separately.
+Use this app to run LEGv8 assembly programs and see what happens to the registers
+and memory. **Java and JavaFX are included—you do not need to install them.**
 
-## Build all four platforms on GitHub
+## 1. Download
 
-1. Open the **Actions** tab in this repository.
-2. If GitHub asks to enable workflows, enable them.
-3. Select **Package LEGv8 simulator** in the left sidebar.
-4. Click **Run workflow**, select **master**, and click the green **Run workflow** button.
-5. Open the new run and wait for its four jobs to finish.
-6. After all four jobs succeed, **Create draft release** runs automatically.
-7. Open **Releases**, review the draft and its attached downloads, and click
-   **Publish release** when ready. Until publication, students cannot see the draft.
+Open the **[Releases page](https://github.com/smirarab/legissFX/releases)** and
+choose the newest release recommended by your instructor. Under **Assets**, click
+the file for your computer:
 
-The build's **Artifacts** section also retains the packages for maintainer testing.
-
-| Artifact | Student computer |
+| Your computer | File to download |
 | --- | --- |
-| `LEGv8-0.71-mac-aarch64-unsigned` | Apple Silicon Mac |
-| `LEGv8-0.71-mac-x64-unsigned` | Intel Mac |
-| `LEGv8-0.71-windows-x64-unsigned` | Intel/AMD Windows PC |
-| `LEGv8-0.71-linux-x64-unsigned` | Intel/AMD Linux desktop |
+| Mac with an Apple M-series chip (M1, M2, etc.) | `LEGv8-0.71-mac-aarch64.zip` |
+| Mac with an Intel processor | `LEGv8-0.71-mac-x64.zip` |
+| Windows PC with an Intel or AMD processor | `LEGv8-0.71-windows-x64.zip` |
+| Linux computer with an Intel or AMD processor | `LEGv8-0.71-linux-x64.tar.gz` |
 
-GitHub wraps each artifact in a ZIP. Inside it is the student ZIP or tar.gz
-and `SHA256SUMS.txt`. Distribute that inner student archive. Each includes
-launch instructions and one simple example that adds 2 + 2 and prints 4.
-No course exercise programs or data files are included.
+**Not sure which Mac you have?** Open the Apple menu → **About This Mac**.
+Look for an Apple chip name or an Intel processor.
 
-The packaging workflow is manually triggered: pushing commits does not start a
-build. Each successful build automatically prepares an unpublished draft release
-with the four platform archives, a combined checksum file, and installation notes.
-Builds are unsigned previews; signing and macOS
-notarization are separate steps before broad classroom distribution.
+You only need one file. Ignore **Source code** and **SHA256SUMS.txt**.
+The app does not run on an iPad or phone.
 
-## Create a release from an already completed build
+## 2. Open the app
 
-1. Open **Actions > Create draft release > Run workflow**.
-2. Select **master**. Leave **Build run ID** blank for the latest successful build,
-   or enter the numeric ID from a packaging run's URL.
-3. Click the green **Run workflow** button. No rebuild is needed.
-4. After it succeeds, open **Releases** and review/publish the draft.
+### Mac
 
-Draft tags use `v0.71-build-<run ID>` and refer to the exact commit that produced
-the packages. All four packages and their checksums must be present and valid.
-Rerunning release creation updates the same draft; it refuses to replace a
-published release. Older builds can only be released while their Actions
-artifacts remain available. Automatic release creation applies to successful
-packaging runs that complete after the release workflow is installed.
+1. Double-click the downloaded ZIP file to extract it.
+2. Open the extracted folder.
+3. Double-click **LEGv8Simulator.app** (Finder may show it as **LEGv8Simulator**).
 
-## Contents and local builds
+You can drag the app into **Applications** if you want to keep it there.
 
-- `legissFX071.jar`: original simulator binary, unchanged.
-- `simulator-packaging/`: build script, pinned JavaFX downloads, checks, and student example.
-- `.github/workflows/package-legv8.yml`: Windows, Linux, and both Mac build jobs.
-- `.github/workflows/release-legv8.yml`: draft releases from completed builds.
+### Windows
 
-See [the packaging guide](simulator-packaging/README.md) for local build commands,
-validation details, signing considerations, and runtime updates. The build does
-not require the recovered Java source, and no JDKs, dependency downloads, or
-built application archives are committed to this repository.
+1. Right-click the downloaded ZIP file and choose **Extract All**.
+2. Open the extracted folder, then the **LEGv8Simulator** folder inside it.
+3. Double-click **LEGv8Simulator.exe** (Windows may hide the `.exe` ending).
 
-The simulator retains its original copyright and ownership. See
-[third-party notices](simulator-packaging/THIRD-PARTY.md) for bundled runtimes.
+Keep the whole folder together. Moving just the `.exe` file will break the app.
+
+### Linux
+
+1. Extract the downloaded `.tar.gz` file using your archive manager.
+2. Open a terminal in the extracted folder.
+3. Run:
+
+   ```sh
+   ./LEGv8Simulator/bin/LEGv8Simulator
+   ```
+
+Keep the whole folder together. A desktop environment with GTK 3.20 or newer
+is required; if you see a missing-library error, ask your instructor for help.
+
+## 3. Try a simple program
+
+1. In the simulator, choose **File → Load Program**.
+2. In the download's **examples** folder, select **add-two-plus-two.a**.
+3. Choose **Execute → Single Cycle Mode**, then **Execute → Run**.
+
+The program adds **2 + 2**. You should see **4** in the output panel and in
+register **X0**. No data file is needed for this example.
+
+## Need help?
+
+These downloads are not yet digitally signed, so your computer may block the
+app or show a security warning. If that happens, contact your instructor with
+your computer type, operating system version, and a screenshot of the message.
+You do not need to install a different version of Java.
+
+---
+
+Original simulator by Kenneth Yun, University of California, San Diego.
+For build and release instructions, see the [developer guide](DEVELOPMENT.md).

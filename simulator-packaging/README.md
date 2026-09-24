@@ -75,7 +75,7 @@ Each artifact contains the student archive and its checksum. Distribute the
 inner archive, not the entire GitHub artifact wrapper.
 
 For student distribution, use the draft release described in the repository's
-main README. **Create draft release** can also be started manually to reuse a
+[developer guide](../DEVELOPMENT.md). **Create draft release** can also be started manually to reuse a
 completed build without rebuilding. It verifies each downloaded archive against
 its build checksum and combines the four manifests into one SHA256SUMS.txt.
 Only you publish the draft; the automation never publishes it.
